@@ -11,6 +11,16 @@ public class TileManager : MonoBehaviour {
     private void Start()
     {
         rowSize = (int) Mathf.Sqrt(tiles.Count);
+
+        ShuffleBoard();
+    }
+
+
+    void ShuffleBoard() {
+
+        for (int i = 0; i < 100; i++) {
+            TilePressed(tiles[Random.Range(0, tiles.Count)] );
+        }
     }
 
     public void TilePressed(TileController tile) {
@@ -28,6 +38,10 @@ public class TileManager : MonoBehaviour {
 
     void SwitchTiles(TileController tile1, TileController tile2) {
         Vector3 pos = tile1.gameObject.transform.position;
+
+       // LeanTween.move(tile1.gameObject, tile2.gameObject.transform.position, 0.5f).setEase(LeanTweenType.easeInCubic);
+       // LeanTween.move(tile2.gameObject, pos, 0.5f).setEase(LeanTweenType.easeInCubic);
+
         tile1.gameObject.transform.position = tile2.gameObject.transform.position;
         tile2.gameObject.transform.position = pos;
 
