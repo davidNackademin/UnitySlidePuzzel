@@ -10,7 +10,7 @@ public class TileController : MonoBehaviour {
     private void OnMouseDown()
     {
         // Debug.Log("Clicked: " + gameObject.name);
-        tileManager.TilePressed(this);
+        tileManager.TilePressed(this, false);
     }
 
 }

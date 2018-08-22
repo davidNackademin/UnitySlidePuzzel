@@ -6,31 +6,46 @@ public class TileManager : MonoBehaviour {
 
     int rowSize;
 
+    public float shuffleSpeed = 0.1f;
     public float moveSpeed = 0.5f;
+    public int shuffleCount = 40;
 
     public List<TileController> tiles;
 
-    public bool inputLock = false;
+    bool inputLock = false;
 
     private void Start()
     {
         rowSize = (int) Mathf.Sqrt(tiles.Count);
 
-        ShuffleBoard();
+        StartCoroutine( Shuffle());
     }
 
 
-    void ShuffleBoard() {
-
-        for (int i = 0; i < 100; i++) {
-            TilePressed(tiles[Random.Range(0, tiles.Count)] );
+    IEnumerator Shuffle() {
+        for (int i = 0; i < shuffleCount;)
+        {
+            if (TilePressed(tiles[Random.Range(0, tiles.Count)], true))
+            {
+                i++;
+                yield return new WaitForSeconds(shuffleSpeed);
+            }
         }
+
     }
 
-    public void TilePressed(TileController tile) {
+
+    //void ShuffleBoard() {
+
+    //    for (int i = 0; i < 100; i++) {
+    //        TilePressed(tiles[Random.Range(0, tiles.Count)] );
+    //    }
+    //}
+
+    public bool TilePressed(TileController tile, bool shuffle) {
 
         if (inputLock)
-            return;
+            return false;
 
         // Debug.Log("Tile pressed: " + tile.gameObject.name);
 
@@ -38,22 +53,26 @@ public class TileManager : MonoBehaviour {
 
         TileController emptyNeighbour = EmptyNeighbour(tile);
 
-        if (emptyNeighbour != null)
-            SwitchTiles(tile, emptyNeighbour);
+        if (emptyNeighbour == null)
+            return false;
+
+        float speed = shuffle ? shuffleSpeed : moveSpeed;
+        SwitchTiles(tile, emptyNeighbour, speed);
+        return true;
 
     }
 
-    void SwitchTiles(TileController tile1, TileController tile2) {
+    void SwitchTiles(TileController tile1, TileController tile2, float speed) {
         inputLock = true;
 
         Vector3 pos = tile1.gameObject.transform.position;
 
-        LeanTween.move(tile1.gameObject, tile2.gameObject.transform.position, moveSpeed)
+        LeanTween.move(tile1.gameObject, tile2.gameObject.transform.position, speed)
                  .setEase(LeanTweenType.easeInCubic)
                  .setOnComplete(() => { 
                             inputLock = false; 
         });
-        LeanTween.move(tile2.gameObject, pos, moveSpeed).setEase(LeanTweenType.easeInCubic);
+        LeanTween.move(tile2.gameObject, pos, speed).setEase(LeanTweenType.easeInCubic);
 
        // tile1.gameObject.transform.position = tile2.gameObject.transform.position;
        // tile2.gameObject.transform.position = pos;
