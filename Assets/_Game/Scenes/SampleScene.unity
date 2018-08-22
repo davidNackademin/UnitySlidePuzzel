@@ -1174,6 +1174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88152d72fa92a4712b78040133507a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 0.5
   tiles:
   - {fileID: 215258434}
   - {fileID: 1682446497}
@@ -1184,6 +1185,7 @@ MonoBehaviour:
   - {fileID: 2038104649}
   - {fileID: 667165740}
   - {fileID: 617363603}
+  inputLock: 0
 --- !u!4 &1849206425
 Transform:
   m_ObjectHideFlags: 0

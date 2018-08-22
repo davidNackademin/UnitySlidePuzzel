@@ -6,7 +6,11 @@ public class TileManager : MonoBehaviour {
 
     int rowSize;
 
+    public float moveSpeed = 0.5f;
+
     public List<TileController> tiles;
+
+    public bool inputLock = false;
 
     private void Start()
     {
@@ -25,6 +29,9 @@ public class TileManager : MonoBehaviour {
 
     public void TilePressed(TileController tile) {
 
+        if (inputLock)
+            return;
+
         // Debug.Log("Tile pressed: " + tile.gameObject.name);
 
         //SwitchTiles(tiles[2], tiles[1]);
@@ -37,13 +44,19 @@ public class TileManager : MonoBehaviour {
     }
 
     void SwitchTiles(TileController tile1, TileController tile2) {
+        inputLock = true;
+
         Vector3 pos = tile1.gameObject.transform.position;
 
-       // LeanTween.move(tile1.gameObject, tile2.gameObject.transform.position, 0.5f).setEase(LeanTweenType.easeInCubic);
-       // LeanTween.move(tile2.gameObject, pos, 0.5f).setEase(LeanTweenType.easeInCubic);
+        LeanTween.move(tile1.gameObject, tile2.gameObject.transform.position, moveSpeed)
+                 .setEase(LeanTweenType.easeInCubic)
+                 .setOnComplete(() => { 
+                            inputLock = false; 
+        });
+        LeanTween.move(tile2.gameObject, pos, moveSpeed).setEase(LeanTweenType.easeInCubic);
 
-        tile1.gameObject.transform.position = tile2.gameObject.transform.position;
-        tile2.gameObject.transform.position = pos;
+       // tile1.gameObject.transform.position = tile2.gameObject.transform.position;
+       // tile2.gameObject.transform.position = pos;
 
         int index1 = TileIndex(tile1);
         int index2 = TileIndex(tile2);
